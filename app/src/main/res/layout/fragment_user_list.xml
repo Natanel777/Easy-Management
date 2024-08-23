@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    tools:context=".ui.UserListFragment">
+
+    <!-- Title TextView -->
+    <TextView
+        android:id="@+id/tvUserNetwork"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="My Users"
+        android:textColor="@android:color/black"
+        android:textSize="42sp"
+        app:layout_constraintStart_toStartOf="@+id/recycle_users"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Add User Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_add_user"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@android:color/white"
+        android:backgroundTintMode="@android:color/white"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textColor="#213CA8"
+        app:cornerRadius="8dp"
+        app:elevation="0dp"
+        app:icon="@drawable/ic_add_user"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="#213CA8"
+        app:layout_constraintBottom_toBottomOf="@+id/tvUserNetwork"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvUserNetwork"
+        app:strokeColor="#213CA8"
+        app:strokeWidth="2dp" />
+
+
+    <!-- Create User Section -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_create_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_add_user"
+        tools:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- EditText for Name -->
+            <EditText
+                android:id="@+id/txt_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:autofillHints="name"
+                android:hint="@string/name"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:textColorHint="#757575"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/txt_email"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.3" />
+
+            <!-- EditText for Email -->
+            <EditText
+                android:id="@+id/txt_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:autofillHints="emailAddress"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp"
+                android:textColorHint="#757575"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/txt_name"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.3" />
+
+            <!-- ImageButton -->
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageButton"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/add_image"
+                android:src="@drawable/ic_placeholder_image"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/buttonAdd"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/txt_email"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Button with "Add" text -->
+            <Button
+                android:id="@+id/buttonAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="@android:color/white"
+                android:backgroundTintMode="@android:color/white"
+                android:text="@string/add"
+                android:textColor="#213CA8"
+                android:textSize="16sp"
+                app:cornerRadius="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="#213CA8"
+                app:strokeWidth="2dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- RecyclerView for User List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_users"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_create_user"
+        tools:listitem="@layout/item_user" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
