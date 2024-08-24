@@ -9,4 +9,8 @@
     <string name="email">Email</string>
     <string name="add_image">add image</string>
     <string name="name">Name</string>
+    <string name="my_users">My Users</string>
+    <string name="background_blur_image">background blur image</string>
+    <string name="edit">Edit</string>
+    <string name="avatar_image">avatar image</string>
 </resources>

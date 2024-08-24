@@ -91,8 +91,6 @@ public class UserListFragment extends Fragment {
 
         });
 
-        viewModel.loadNextPage();
-
         getBinding().btnAddUser.setOnClickListener(v -> {
             View cardCreateUser = getBinding().cardCreateUser;
             if (cardCreateUser.getVisibility() == View.GONE) {

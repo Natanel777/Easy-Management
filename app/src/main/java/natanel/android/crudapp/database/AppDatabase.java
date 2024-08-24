@@ -4,7 +4,6 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-
 import natanel.android.crudapp.database.dao.UserDao;
 import natanel.android.crudapp.database.entity.User;
 
@@ -23,7 +22,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "user_database")
                             .fallbackToDestructiveMigration()
-                            .allowMainThreadQueries()
+//                            .allowMainThreadQueries()
                             .build();
                 }
             }

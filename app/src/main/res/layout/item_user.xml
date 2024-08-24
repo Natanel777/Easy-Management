@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_item"
     android:layout_width="180dp"
-    android:layout_height="220dp"
+    android:layout_height="260dp"
     android:layout_margin="8dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp"
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.24" />
+            app:layout_constraintGuide_percent="0.28" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/bottom_guideline"
@@ -39,7 +39,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/avatar_blur_example" />
+            tools:srcCompat="@drawable/avatar_blur_example"
+            android:contentDescription="@string/background_blur_image" />
 
         <!-- Rounded Profile Image with White Stroke -->
         <de.hdodenhof.circleimageview.CircleImageView
@@ -86,7 +87,7 @@
             android:id="@+id/editButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit"
+            android:text="@string/edit"
             android:textColor="@android:color/black"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -111,8 +112,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:text="george.bluth@reqres.in"
+            android:layout_marginTop="8dp"
+            tools:text="george.bluth@reqres.in"
             android:textColor="@android:color/black"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -129,7 +130,8 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_remove_user" />
+            app:srcCompat="@drawable/ic_remove_user"
+            android:contentDescription="@string/avatar_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

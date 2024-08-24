@@ -1,7 +1,5 @@
 package natanel.android.crudapp.database.repository;
 
-import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
-
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
@@ -29,7 +27,7 @@ public class UserRepository {
     public LiveData<List<User>> getPaginatedUsers(int pageNumber) {
         int displayItems = 6;
         //int displayItems = PAGE_SIZE;
-        int offset = (pageNumber - 1) * displayItems ;
+        int offset = (pageNumber - 1) * displayItems;
         return userDao.getUsers(displayItems, offset);
     }
 
@@ -49,8 +47,6 @@ public class UserRepository {
         // Perform the database operation on a background thread
         executor.execute(() -> userDao.insertUsers(userList));
     }
-
-    public void delete(){
-        userDao.deleteAllUsers();
-    }
 }
+
+
