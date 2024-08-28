@@ -44,13 +44,13 @@ public class UserListViewModel extends ViewModel {
 
 
     public void getUsers() {
-            Log.d("UserListViewModel", "getUsers() Started");
+        Log.d("UserListViewModel", "getUsers() Started");
         int totalApiPages = sharedPreferences.getInt("totalApiPages", NOT_SET_YET);
         int loadedPages = sharedPreferences.getInt("LoadedPages", NOT_SET_YET);
 
         if (Boolean.TRUE.equals(_isLoading.getValue())) return;
         if (currentPage.getValue() == null) return;
-        if (currentPage.getValue() > totalApiPages && totalApiPages != -1 ) return;
+        //if (currentPage.getValue() > totalApiPages && totalApiPages != -1 ) return;
 
         _isLoading.postValue(true);
 
@@ -63,28 +63,53 @@ public class UserListViewModel extends ViewModel {
             syncDataFromApi(currentPage.getValue());
 
         } else {
-                if (currentPage.getValue() <= loadedPages) {
-                    Log.d("UserListViewModel", "Activating appendNextPageUsers from getUsers()");
-                    observeAndAppendNextPageUsers(currentPage.getValue());
-                } else {
-                    Log.d("UserListViewModel", "Activating syncDataFromApi from getUsers() LAST");
-                    syncDataFromApi(currentPage.getValue());
-                }
+            if (currentPage.getValue() <= loadedPages || currentPage.getValue() > totalApiPages) {
+                Log.d("UserListViewModel", "Activating appendNextPageUsers from getUsers() current page: " + currentPage.getValue() + " loadedPages: " + loadedPages);
+                observeAndAppendNextPageUsers(currentPage.getValue());
+            } else {
+                Log.d("UserListViewModel", "Activating syncDataFromApi from getUsers() LAST");
+                syncDataFromApi(currentPage.getValue());
             }
+        }
     }
 
 
-
     // Appends users from the requested page to the current list and updates the UI.
+    // We ensure that there are no duplicates by any chance.
     private void observeAndAppendNextPageUsers(int page) {
         LiveData<List<User>> getNextUsersLiveData = userRepository.getPaginatedUsers(page);
         getNextUsersLiveData.observeForever(new Observer<List<User>>() {
             @Override
-            public void onChanged(List<User> users) {
-                if (users != null && !users.isEmpty()) {
+            public void onChanged(List<User> nextUsers) {
+                if (nextUsers != null && !nextUsers.isEmpty()) {
                     List<User> currentUsers = new ArrayList<>(Objects.requireNonNull(_users.getValue()));
-                    currentUsers.addAll(users);  // Simply add all users from the new page
+
+                    for (User nextUser : nextUsers) {
+                        boolean userExists = false;
+
+                        // Check if the user already exists in the current list
+                        for (User existingUser : currentUsers) {
+                            if (existingUser.getId() == nextUser.getId()) {
+                                userExists = true;
+                                break;
+                            }
+                        }
+
+                        // If the user does not exist, add them to the list
+                        if (!userExists) {
+                            currentUsers.add(nextUser);
+                        }
+                    }
+
+                    // Post the updated list
                     _users.setValue(currentUsers);
+
+
+                } else {
+                    // there is no more data available for the next page so adjust the current page number back to the previous page.
+                    int current = currentPage.getValue() != null ? currentPage.getValue() : 1;
+                    currentPage.setValue(current - 1);
+                    Log.d("UserListViewModel", "updating currentPage: " + currentPage.getValue());
                 }
                 _isLoading.postValue(false);
                 getNextUsersLiveData.removeObserver(this);
@@ -126,7 +151,7 @@ public class UserListViewModel extends ViewModel {
         int current = currentPage.getValue() != null ? currentPage.getValue() : 1;
 
         // If the current page is less than the total number of pages and no data is currently being loaded:
-        if (current < totalApiPages && Boolean.FALSE.equals(_isLoading.getValue())) {
+        if (Boolean.FALSE.equals(_isLoading.getValue())) {
             currentPage.setValue(current + 1); // Increment current page
             Log.d("UserListViewModel", "Loading next page: " + currentPage.getValue());
             getUsers(); // Fetch users for the next page
@@ -146,5 +171,42 @@ public class UserListViewModel extends ViewModel {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("totalApiPages", newValue);
         editor.apply();
+    }
+
+    public void addUser(User user) {
+        userRepository.addUser(user);
+
+        // Create a new list to hold the updated users
+        List<User> currentUsers = new ArrayList<>();
+        currentUsers.add(user); // Add the new user first
+
+        // Add existing users from the LiveData
+        currentUsers.addAll(Objects.requireNonNull(_users.getValue()));
+
+        // Post the updated list to the LiveData
+        _users.postValue(currentUsers);
+    }
+
+    public void removeUser(User user) {
+        userRepository.deleteUser(user.getId());
+
+        // Update the LiveData to remove the user from the list
+        List<User> currentUsers = new ArrayList<>(Objects.requireNonNull(_users.getValue()));
+        currentUsers.removeIf(existingUser -> existingUser.getId() == user.getId()); // if exist in the user list remove it
+        _users.setValue(currentUsers);
+    }
+
+    public void updateUser(User user) {
+        userRepository.updateUser(user);
+
+        // Update the LiveData to reflect changes in the UI
+        List<User> currentUsers = new ArrayList<>(Objects.requireNonNull(_users.getValue()));
+        for (int i = 0; i < currentUsers.size(); i++) {
+            if (currentUsers.get(i).getId() == user.getId()) {
+                currentUsers.set(i, user);
+                break;
+            }
+        }
+        _users.setValue(currentUsers);
     }
 }

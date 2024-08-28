@@ -41,11 +41,36 @@ public class UserRepository {
             user.setEmail(data.getEmail());
             user.setFirstName(data.getFirstName());
             user.setLastName(data.getLastName());
+            user.setPosition(data.getId());
             userList.add(user);
         }
 
         // Perform the database operation on a background thread
         executor.execute(() -> userDao.insertUsers(userList));
+    }
+
+    // Method to generate a new user ID
+    public void getUserCount(Callback<Integer> callback) {
+        executor.execute(() -> {
+            int count = userDao.getUserCount();
+            callback.onComplete(count);
+        });
+    }
+
+    public void addUser(User newUser) {
+        // Run operations in a transaction
+        executor.execute(() -> {
+            userDao.incrementUserPositions();  // Increment positions of existing users
+            userDao.insertUser(newUser);  // Insert new user
+        });
+    }
+
+    public void deleteUser(int userId) {
+        executor.execute(() -> userDao.deleteUser(userId));
+    }
+
+    public void updateUser(User user) {
+        executor.execute(() -> userDao.updateUser(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getAvatar()));
     }
 }
 

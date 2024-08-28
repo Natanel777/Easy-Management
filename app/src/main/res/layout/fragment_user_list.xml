@@ -109,8 +109,6 @@
                 android:layout_height="0dp"
                 android:contentDescription="@string/add_image"
                 android:src="@drawable/ic_placeholder_image"
-                app:civ_border_color="@android:color/white"
-                app:civ_border_width="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/buttonAdd"
                 app:layout_constraintHorizontal_bias="0.5"

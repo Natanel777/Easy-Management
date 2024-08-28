@@ -34,13 +34,13 @@
             android:id="@+id/avatar_blur_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:contentDescription="@string/background_blur_image"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@+id/image_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/avatar_blur_example"
-            android:contentDescription="@string/background_blur_image" />
+            tools:srcCompat="@drawable/avatar_blur_example" />
 
         <!-- Rounded Profile Image with White Stroke -->
         <de.hdodenhof.circleimageview.CircleImageView
@@ -49,6 +49,8 @@
             android:layout_height="80dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
             app:civ_border_color="@android:color/white"
             app:civ_border_width="3dp"
             app:layout_constraintBottom_toTopOf="@id/image_guideline"
@@ -59,17 +61,71 @@
 
         <!-- Name TextView (Switch to EditText in Code) -->
         <TextView
-            android:id="@+id/nameTextView"
+            android:id="@+id/name_input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/avatar_image"
-            tools:text="George Bluth" />
+            tools:text="George Bluth"
+            tools:visibility="visible" />
+
+        <!-- Email TextView -->
+        <TextView
+            android:id="@+id/email_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name_input"
+            tools:text="george.bluth@reqres.in" />
+
+        <!-- Name EditText -->
+        <EditText
+            android:id="@+id/edit_txt_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="Enter Name"
+            android:inputType="textPersonName"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/avatar_image"
+            tools:visibility="visible" />
+
+        <!-- Email EditText -->
+        <EditText
+            android:id="@+id/edit_txt_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="Enter Email"
+            android:inputType="textEmailAddress"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:visibility="gone"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_txt_name"
+            tools:visibility="visible" />
 
 
         <!-- Separator Line -->
@@ -82,56 +138,81 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bottom_guideline" />
 
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bottom_guideline"
+            tools:visibility="visible" />
+
         <!-- Edit Button -->
         <TextView
-            android:id="@+id/editButton"
+            android:id="@+id/edit_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/edit"
             android:textColor="@android:color/black"
             android:textSize="14sp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/separatorLine" />
+            app:layout_constraintTop_toBottomOf="@+id/separatorLine"
+            tools:visibility="visible" />
 
-        <!-- Email Icon -->
-        <!--        <ImageView-->
-        <!--            android:id="@+id/emailIcon"-->
-        <!--            android:layout_width="12dp"-->
-        <!--            android:layout_height="12dp"-->
-        <!--            android:layout_marginEnd="4dp"-->
-        <!--            android:contentDescription="@string/email_icon"-->
-        <!--            android:src="@drawable/ic_email"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@+id/emailTextView"-->
-        <!--            app:layout_constraintEnd_toStartOf="@+id/emailTextView" />-->
-
-        <!-- Email TextView -->
-        <TextView
-            android:id="@+id/emailTextView"
-            android:layout_width="wrap_content"
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
-            tools:text="george.bluth@reqres.in"
-            android:textColor="@android:color/black"
-            android:textSize="13sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="#00308F"
+            android:padding="8dp"
+            android:text="Save"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="gone"
+            android:focusable="true"
+            app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/separatorLine"
+            tools:visibility="visible" />
+
+        <!-- Cancel Button -->
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:padding="8dp"
+            android:text="Cancel"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btn_save"
+            app:layout_constraintTop_toBottomOf="@+id/separatorLine"
+            tools:visibility="visible" />
+
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/btn_remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
             android:background="#00000000"
+            android:contentDescription="@string/avatar_image"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_remove_user"
-            android:contentDescription="@string/avatar_image" />
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -12,6 +12,7 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
+    public int position;  // for sorting
 
     // Getters and setters
     public int getId() {
@@ -34,6 +35,10 @@ public class User {
         return email;
     }
 
+    public int getPosition() {
+        return position;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -52,5 +57,9 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }
