@@ -110,8 +110,7 @@ public class UserListFragment extends Fragment implements MainActivity.OnImageSe
 
         UserListViewModel viewModel = new ViewModelProvider(this, factory).get(UserListViewModel.class);
 
-        adapter = new UserAdapter(viewModel, this, imagePickerLauncher);
-
+        adapter = new UserAdapter(viewModel, imagePickerLauncher);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         getBinding().recycleUsers.setLayoutManager(layoutManager);
         getBinding().recycleUsers.setAdapter(adapter);
@@ -218,8 +217,6 @@ public class UserListFragment extends Fragment implements MainActivity.OnImageSe
             //Save the file path as the avatar in the user entity
             getBinding().imageButton.setImageURI(imageUri);
             getBinding().imageButton.setTag(fileName); // Store the image URI as a tag
-
-            Log.d("UserListFragment", "we inside UserListFragment: " + selectedImageUri);
         }
     }
 

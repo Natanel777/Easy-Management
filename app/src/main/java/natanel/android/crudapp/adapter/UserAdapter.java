@@ -29,24 +29,21 @@ import natanel.android.crudapp.MainActivity;
 import natanel.android.crudapp.R;
 import natanel.android.crudapp.database.entity.User;
 import natanel.android.crudapp.databinding.ItemUserBinding;
-import natanel.android.crudapp.ui.UserListFragment;
 import natanel.android.crudapp.ui.UserListViewModel;
 import natanel.android.crudapp.utils.ImageUtils;
 import natanel.android.crudapp.utils.ValidationUtils;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> implements MainActivity.OnImageSelectedListener {
 
     private List<User> users = new ArrayList<>();
     private final UserListViewModel viewModel; // Reference to ViewModel
+    private static ActivityResultLauncher<Intent> imagePickerLauncher;
+    private Uri imageUri;
+    private String fileName;
 
-    private final UserListFragment fragment; // Store the fragment reference
-
-    private final ActivityResultLauncher<Intent> imagePickerLauncher;
-
-    public UserAdapter(UserListViewModel viewModel, UserListFragment fragment, ActivityResultLauncher<Intent> imagePickerLauncher) {
+    public UserAdapter(UserListViewModel viewModel, ActivityResultLauncher<Intent> imagePickerLauncher) {
         this.viewModel = viewModel;
-        this.fragment = fragment;
-        this.imagePickerLauncher = imagePickerLauncher;
+        UserAdapter.imagePickerLauncher = imagePickerLauncher; // UserAdapter -> UserListFragment -> MainActivity -> returns ActivityResultLauncher
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -61,7 +58,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemUserBinding binding = ItemUserBinding.inflate(inflater, parent, false);
-        return new UserViewHolder(binding, viewModel,imagePickerLauncher,fragment);
+        return new UserViewHolder(binding, viewModel);
     }
 
     @Override
@@ -76,44 +73,25 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.bind(user);
     }
 
+    @Override
+    public void onImageSelected(Uri selectedImageUri) {
 
+        Log.d("UserAdapter", "onImageSelected: we go image: " + selectedImageUri.toString());
+    }
 
-    static class UserViewHolder extends RecyclerView.ViewHolder implements MainActivity.OnImageSelectedListener {
+    static class UserViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemUserBinding binding;
         private final UserListViewModel viewModel; // Reference to ViewModel
 
-        private ActivityResultLauncher<Intent> imagePickerLauncher;
-
-        private final UserListFragment fragment;
-
-        private Uri imageUri;
-        private String fileName;
-
-        public UserViewHolder(@NonNull ItemUserBinding binding, UserListViewModel viewModel, ActivityResultLauncher<Intent> imagePickerLauncher, UserListFragment fragment) {
+        public UserViewHolder(@NonNull ItemUserBinding binding, UserListViewModel viewModel) {
             super(binding.getRoot());
             this.binding = binding;
             this.viewModel = viewModel;
-            this.imagePickerLauncher = imagePickerLauncher; // UserAdapter -> UserListFragment -> MainActivity -> returns ActivityResultLauncher
-            this.fragment = fragment;
-        }
-
-
-
-        @Override
-        public void onImageSelected(Uri selectedImageUri) {
-            if (selectedImageUri != null) {
-                imageUri = selectedImageUri;
-                Log.d("UserAdapter", "onImageSelected: we go image: " + selectedImageUri);
-            }
         }
 
         public void bind(@NonNull User user) {
 
-            // Get the ActivityResultLauncher from MainActivity
-            imagePickerLauncher = ((MainActivity) fragment.requireActivity()).getImagePickerLauncher();
-
-            ((MainActivity) fragment.requireActivity()).setOnImageSelectedListener(this);
 
             // Change the user image on edit mode
             binding.avatarImage.setOnClickListener(v -> {
