@@ -32,7 +32,7 @@ public class UserRepository {
     }
 
     // Map Data list to User list and update the database
-    public void updateDao(List<Data> dataList) {
+    public List<User> updateDao(List<Data> dataList) {
         List<User> userList = new ArrayList<>();
         for (Data data : dataList) {
             User user = new User();
@@ -47,6 +47,8 @@ public class UserRepository {
 
         // Perform the database operation on a background thread
         executor.execute(() -> userDao.insertUsers(userList));
+
+        return userList;
     }
 
     // Method to generate a new user ID

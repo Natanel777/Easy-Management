@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CRUD App</string>
+    <string name="app_name">Easy Management</string>
     <string name="email_icon">email icon</string>
     <string name="edit_button">edit_button</string>
     <string name="image_button">Image Button</string>

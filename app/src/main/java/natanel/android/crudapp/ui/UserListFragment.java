@@ -130,8 +130,10 @@ public class UserListFragment extends Fragment {
         });
 
         viewModel.users.observe(getViewLifecycleOwner(), users -> {
-            adapter.setUsers(users);
-            adapter.notifyDataSetChanged();
+            if (users != null && !users.isEmpty()) {
+                adapter.setUsers(users);
+                adapter.notifyDataSetChanged();
+            }
         });
 
         viewModel.isLoading.observe(getViewLifecycleOwner(), isLoading -> getBinding().progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE));

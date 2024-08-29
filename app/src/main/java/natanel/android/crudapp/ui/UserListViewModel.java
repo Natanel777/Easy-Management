@@ -106,15 +106,22 @@ public class UserListViewModel extends ViewModel {
 
     // Syncs data from the API, saves it to the database, and updates the UI.
     public void syncDataFromApi(int page) {
+        int totalApiPages = sharedPreferences.getInt("totalApiPages", NOT_SET_YET);
         ApiService.create().getUsers(page).enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(@NonNull Call<UserResponse> call, @NonNull Response<UserResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     UserResponse userResponse = response.body();
-                    userRepository.updateDao(userResponse.getData()); // update the database
+                    List<User> updatedUsers =userRepository.updateDao(userResponse.getData()); // update the database
                     updateLoadedPages(userResponse.getPage()); // update LoadedPages
                     updateTotalApiPages(userResponse.getTotalPages()); // update TotalApiPages
 
+                    //  If its the first run
+                    if (totalApiPages == NOT_SET_YET){
+                        _users.setValue(updatedUsers);
+                        _isLoading.postValue(false);
+                        return;
+                    }
                     observeAndAppendNextPageUsers(page); // Only observe and append after successful API call and update database
                 } else {
                     _isLoading.postValue(false);
