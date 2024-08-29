@@ -1,6 +1,6 @@
-# User Management CRUD App ![App Icon](screenshots/crud_icon_logo.ico)
+# Easy Management ![App Icon](screenshots/crud_icon_logo.ico)
 
-The **User Management CRUD App** is an Android application designed to efficiently manage user data, providing a complete suite of functionalities for creating, reading, updating, and deleting (CRUD) users. 
+The Easy Management is an **CRUD App** Android application designed to efficiently manage user data, providing a complete suite of functionalities for creating, reading, updating, and deleting (CRUD) users.
 
 The app leverages modern Android development practices and technologies to deliver a responsive and intuitive user experience, adaptable to various devices including phones and tablets.
 
@@ -77,5 +77,6 @@ The app leverages modern Android development practices and technologies to deliv
 
 ---
 
-### Thank You for Checking Out the User Management CRUD App! 
+### Thank You for Checking Out the User Management App!
+![Easy Management Image](screenshots/easy_managment.png)
 
