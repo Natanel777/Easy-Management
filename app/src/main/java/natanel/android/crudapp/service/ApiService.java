@@ -3,7 +3,6 @@ package natanel.android.crudapp.service;
 import natanel.android.crudapp.service.model.UserResponse;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import okhttp3.OkHttpClient;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import retrofit2.Call;

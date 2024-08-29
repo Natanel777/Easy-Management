@@ -18,15 +18,15 @@
         android:gravity="center"
         android:text="@string/my_users"
         android:textColor="@android:color/black"
-        android:textSize="42sp"
+        android:textSize="62sp"
         app:layout_constraintStart_toStartOf="@+id/recycle_users"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Add User Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_add_user"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
         android:layout_margin="16dp"
         android:layout_marginEnd="8dp"
         android:backgroundTint="@android:color/white"
@@ -39,6 +39,7 @@
         app:elevation="0dp"
         app:icon="@drawable/ic_add_user"
         app:iconGravity="textStart"
+        app:iconSize="40dp"
         app:iconPadding="8dp"
         app:iconTint="#213CA8"
         app:layout_constraintBottom_toBottomOf="@+id/tvUserNetwork"
@@ -52,7 +53,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_create_user"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="190dp"
         android:layout_marginTop="8dp"
         android:visibility="gone"
         app:cardCornerRadius="10dp"
@@ -65,7 +66,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="16dp">
 
             <!-- EditText for Name -->
@@ -74,13 +75,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:autofillHints="name"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:hint="@string/name"
+                android:imeOptions="actionNext"
                 android:inputType="text"
                 android:minHeight="48dp"
                 android:textColorHint="#757575"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:imeOptions="actionNext"
+                android:textSize="40sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/txt_email"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -95,13 +97,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:autofillHints="emailAddress"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:hint="@string/email"
+                android:imeOptions="actionDone"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:textColorHint="#757575"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:imeOptions="actionDone"
+                android:textSize="40sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/imageButton"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -112,7 +115,7 @@
             <!-- ImageButton -->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageButton"
-                android:layout_width="0dp"
+                android:layout_width="50dp"
                 android:layout_height="0dp"
                 android:contentDescription="@string/add_image"
                 android:src="@drawable/ic_placeholder_image"
@@ -125,14 +128,14 @@
             <!-- Button with "Add" text -->
             <Button
                 android:id="@+id/buttonAdd"
-                android:layout_width="wrap_content"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:backgroundTint="@android:color/white"
                 android:backgroundTintMode="@android:color/white"
                 android:text="@string/add"
                 android:textColor="#213CA8"
-                android:textSize="16sp"
+                android:textSize="36sp"
                 app:cornerRadius="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

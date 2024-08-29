@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +32,9 @@ import natanel.android.crudapp.utils.ImageUtils;
 import natanel.android.crudapp.utils.ValidationUtils;
 
 public class UserListFragment extends Fragment {
-
     private UserAdapter adapter;
     private FragmentUserListBinding _binding;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
-
     private Uri imageUri;
     private String fileName;
 
@@ -71,7 +68,7 @@ public class UserListFragment extends Fragment {
 
         UserListViewModel viewModel = new ViewModelProvider(this, factory).get(UserListViewModel.class);
 
-//        // Initialize the ActivityResultLauncher
+        // Initialize the ActivityResultLauncher
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -81,15 +78,14 @@ public class UserListFragment extends Fragment {
                             //Create a unique file name for the image
                             fileName = "user_image_" + System.currentTimeMillis() + ".jpg";
 
+                            // Fragment imagePickerLauncher
                             if (viewModel.originalUserAdapter.getValue() == null) {
-                                //Save the file path as the avatar in the user entity
                                 getBinding().imageButton.setImageURI(imageUri);
-                                getBinding().imageButton.setTag(fileName); // Store the image URI as a tag
-                            } else {
+                                getBinding().imageButton.setTag(fileName);
+                            }
+                            // Adapter imagePickerLauncher
+                            else {
                                 User originalUser = viewModel.originalUserAdapter.getValue();
-
-                                Log.d("UserAdapter", "onViewCreated1 ORIGINAL IMAGE is: " +originalUser.getAvatar());
-
                                 // Create a new updated user and copy all values from the original user
                                 User updatedUser = new User();
                                 updatedUser.setId(originalUser.getId());
@@ -100,11 +96,7 @@ public class UserListFragment extends Fragment {
 
                                 // Update the avatar with the new image URI
                                 updatedUser.setAvatar(imageUri.toString());
-
                                 viewModel.setNewUserAdapter(updatedUser);
-                                // Use the updatedUser object as needed
-                                Log.d("UserListFragment", "Updated User: " + updatedUser.getAvatar());
-                                Log.d("UserAdapter", "onViewCreated2 ORIGINAL IMAGE is: " +originalUser.getAvatar());
                             }
                         }
                     }
@@ -142,13 +134,9 @@ public class UserListFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });
 
-        // Optionally observe loading state
-        viewModel.isLoading.observe(getViewLifecycleOwner(), isLoading -> {
-            // Handle loading state (e.g., show/hide a progress bar)
-            getBinding().progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        viewModel.isLoading.observe(getViewLifecycleOwner(), isLoading -> getBinding().progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE));
 
-        });
-
+        // Make add user card visible
         getBinding().btnAddUser.setOnClickListener(v -> {
             View cardCreateUser = getBinding().cardCreateUser;
             if (cardCreateUser.getVisibility() == View.GONE) {
@@ -186,13 +174,6 @@ public class UserListFragment extends Fragment {
                     newUser.setAvatar(uriString); // Convert URI to string for storing
                     newUser.setPosition(1); // Set position for the new user
 
-                    Log.d("UserListFragment", "USER ID num: " + newUser.getId());
-                    Log.d("UserListFragment", "USER First Name: " + newUser.getFirstName());
-                    Log.d("UserListFragment", "USER Last Name: " + newUser.getLastName());
-                    Log.d("UserListFragment", "USER Email: " + newUser.getEmail());
-                    Log.d("UserListFragment", "USER Image URI: " + newUser.getAvatar());
-                    Log.d("UserListFragment", "USER Position: " + newUser.getPosition());
-
                     // Add the new user using the repository
                     viewModel.addUser(newUser);
 
@@ -220,19 +201,6 @@ public class UserListFragment extends Fragment {
         getBinding().imageButton.setImageResource(R.drawable.ic_placeholder_image); // Set a placeholder image
         getBinding().imageButton.setTag(null); // Clear the image URI
     }
-
-//    private int findUserPosition(int userId) {
-//        List<User> users = viewModel.users.getValue();
-//        if (users != null) {
-//            for (int i = 0; i < users.size(); i++) {
-//                if (users.get(i).getId() == userId) {
-//                    return i;
-//                }
-//            }
-//        }
-//        return -1; // Return -1 if user not found
-//    }
-
 
     @Override
     public void onDestroyView() {

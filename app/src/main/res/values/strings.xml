@@ -13,4 +13,8 @@
     <string name="background_blur_image">background blur image</string>
     <string name="edit">Edit</string>
     <string name="avatar_image">avatar image</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_name">Enter Name</string>
 </resources>
