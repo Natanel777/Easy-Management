@@ -28,8 +28,13 @@ public class UserListViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>(false);
     public LiveData<Boolean> isLoading = _isLoading;
+
+    private final MutableLiveData<User> _originalUserAdapter = new MutableLiveData<>(null);
+    public LiveData<User> originalUserAdapter = _originalUserAdapter;
+
+    private final MutableLiveData<User> _newUserAdapter = new MutableLiveData<>(null);
+    public LiveData<User> newUserAdapter = _newUserAdapter;
     private final MutableLiveData<Integer> currentPage = new MutableLiveData<>(1);
-    //private final Executor executor = Executors.newSingleThreadExecutor();
     private static final int NOT_SET_YET = -1;
 
     private final UserRepository userRepository;
@@ -200,13 +205,26 @@ public class UserListViewModel extends ViewModel {
         userRepository.updateUser(user);
 
         // Update the LiveData to reflect changes in the UI
+        updateUserAvatarInUI(user);
+    }
+
+    public void updateUserAvatarInUI(User updatedUser) {
+        // Update the LiveData to reflect changes in the UI
         List<User> currentUsers = new ArrayList<>(Objects.requireNonNull(_users.getValue()));
         for (int i = 0; i < currentUsers.size(); i++) {
-            if (currentUsers.get(i).getId() == user.getId()) {
-                currentUsers.set(i, user);
+            if (currentUsers.get(i).getId() == updatedUser.getId()) {
+                currentUsers.set(i, updatedUser);  // Update the user in the list
                 break;
             }
         }
-        _users.setValue(currentUsers);
+        _users.setValue(currentUsers);  // Post the updated list to refresh the UI
+    }
+
+    public void setOriginalUserAdapter(User user){
+        _originalUserAdapter.setValue(user);
+    }
+
+    public void setNewUserAdapter(User user){
+        _newUserAdapter.setValue(user);
     }
 }

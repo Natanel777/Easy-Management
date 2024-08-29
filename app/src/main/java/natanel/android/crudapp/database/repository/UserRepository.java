@@ -50,9 +50,9 @@ public class UserRepository {
     }
 
     // Method to generate a new user ID
-    public void getUserCount(Callback<Integer> callback) {
+    public void getLastUserId(Callback<Integer> callback) {
         executor.execute(() -> {
-            int count = userDao.getUserCount();
+            int count = userDao.getLastUserId();
             callback.onComplete(count);
         });
     }

@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -26,13 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Objects;
-
-import natanel.android.crudapp.MainActivity;
 import natanel.android.crudapp.R;
 import natanel.android.crudapp.adapter.UserAdapter;
 import natanel.android.crudapp.database.entity.User;
@@ -41,7 +32,7 @@ import natanel.android.crudapp.databinding.FragmentUserListBinding;
 import natanel.android.crudapp.utils.ImageUtils;
 import natanel.android.crudapp.utils.ValidationUtils;
 
-public class UserListFragment extends Fragment implements MainActivity.OnImageSelectedListener {
+public class UserListFragment extends Fragment {
 
     private UserAdapter adapter;
     private FragmentUserListBinding _binding;
@@ -73,42 +64,62 @@ public class UserListFragment extends Fragment implements MainActivity.OnImageSe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        // Initialize the ActivityResultLauncher
-//        imagePickerLauncher = registerForActivityResult(
-//                new ActivityResultContracts.StartActivityForResult(),
-//                result -> {
-//                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-//                        imageUri = result.getData().getData();
-//                        if (imageUri != null) {
-//                            //Create a unique file name for the image
-//                            fileName = "user_image_" + System.currentTimeMillis() + ".jpg";
-//
-//                            //Save the file path as the avatar in the user entity
-//                            getBinding().imageButton.setImageURI(imageUri);
-//                            getBinding().imageButton.setTag(fileName); // Store the image URI as a tag
-//                        }
-//                    }
-//                }
-//        );
-
-        // Get the ActivityResultLauncher from MainActivity
-        imagePickerLauncher = ((MainActivity) requireActivity()).getImagePickerLauncher();
-
-        // Activating image upload inside MainActivity
-        getBinding().imageButton.setOnClickListener(v -> {
-            // Make actions from onImageSelected func(in the fragment) sets to MainActivity listener(onImageSelectedListener)
-            ((MainActivity) requireActivity()).setOnImageSelectedListener(this);
-
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            imagePickerLauncher.launch(intent);
-        });
-
         // Initialize UserRepository and SharedPreferences
         UserRepository userRepository = new UserRepository(getContext());
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
         UserListViewModelFactory factory = new UserListViewModelFactory(userRepository, sharedPreferences);
 
         UserListViewModel viewModel = new ViewModelProvider(this, factory).get(UserListViewModel.class);
+
+//        // Initialize the ActivityResultLauncher
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        imageUri = result.getData().getData();
+                        if (imageUri != null) {
+                            //Create a unique file name for the image
+                            fileName = "user_image_" + System.currentTimeMillis() + ".jpg";
+
+                            if (viewModel.originalUserAdapter.getValue() == null) {
+                                //Save the file path as the avatar in the user entity
+                                getBinding().imageButton.setImageURI(imageUri);
+                                getBinding().imageButton.setTag(fileName); // Store the image URI as a tag
+                            } else {
+                                User originalUser = viewModel.originalUserAdapter.getValue();
+
+                                Log.d("UserAdapter", "onViewCreated1 ORIGINAL IMAGE is: " +originalUser.getAvatar());
+
+                                // Create a new updated user and copy all values from the original user
+                                User updatedUser = new User();
+                                updatedUser.setId(originalUser.getId());
+                                updatedUser.setFirstName(originalUser.getFirstName());
+                                updatedUser.setLastName(originalUser.getLastName());
+                                updatedUser.setEmail(originalUser.getEmail());
+                                updatedUser.setPosition(originalUser.getPosition());
+
+                                // Update the avatar with the new image URI
+                                updatedUser.setAvatar(imageUri.toString());
+
+                                viewModel.setNewUserAdapter(updatedUser);
+                                // Use the updatedUser object as needed
+                                Log.d("UserListFragment", "Updated User: " + updatedUser.getAvatar());
+                                Log.d("UserAdapter", "onViewCreated2 ORIGINAL IMAGE is: " +originalUser.getAvatar());
+                            }
+                        }
+                    }
+                }
+        );
+
+
+        // Activating image upload inside MainActivity
+        getBinding().imageButton.setOnClickListener(v -> {
+            viewModel.setOriginalUserAdapter(null);
+            viewModel.setNewUserAdapter(null);
+
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            imagePickerLauncher.launch(intent);
+        });
 
         adapter = new UserAdapter(viewModel, imagePickerLauncher);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
@@ -129,7 +140,6 @@ public class UserListFragment extends Fragment implements MainActivity.OnImageSe
         viewModel.users.observe(getViewLifecycleOwner(), users -> {
             adapter.setUsers(users);
             adapter.notifyDataSetChanged();
-            //((MainActivity) requireActivity()).setOnImageSelectedListener((MainActivity.OnImageSelectedListener) adapter);
         });
 
         // Optionally observe loading state
@@ -159,9 +169,6 @@ public class UserListFragment extends Fragment implements MainActivity.OnImageSe
                 // Add image to internal storage
                 ImageUtils.saveImageToInternalStorage(requireContext(), imageUri, fileName);
 
-                // Convert the String back to a Uri
-                imageUri = Uri.parse(uriString);
-
                 // Split the name into first and last names
                 String[] nameParts = fullName.split(" ", 2);
 
@@ -169,14 +176,14 @@ public class UserListFragment extends Fragment implements MainActivity.OnImageSe
                 String firstName = nameParts[0].substring(0, 1).toUpperCase() + nameParts[0].substring(1).toLowerCase();
                 String lastName = nameParts[1].substring(0, 1).toUpperCase() + nameParts[1].substring(1).toLowerCase();
 
-                userRepository.getUserCount(count -> {
+                userRepository.getLastUserId(count -> {
                     // Create a new User object
                     User newUser = new User();
                     newUser.setId(count + 1); // Make sure to generate a unique ID for the new user
                     newUser.setFirstName(firstName);
                     newUser.setLastName(lastName);
                     newUser.setEmail(email);
-                    newUser.setAvatar(imageUri.toString()); // Convert URI to string for storing
+                    newUser.setAvatar(uriString); // Convert URI to string for storing
                     newUser.setPosition(1); // Set position for the new user
 
                     Log.d("UserListFragment", "USER ID num: " + newUser.getId());
@@ -206,20 +213,6 @@ public class UserListFragment extends Fragment implements MainActivity.OnImageSe
         });
     }
 
-    @Override
-    public void onImageSelected(Uri selectedImageUri) {
-        if (selectedImageUri != null) {
-            imageUri = selectedImageUri;
-
-            //Create a unique file name for the image
-            fileName = "user_image_" + System.currentTimeMillis() + ".jpg";
-
-            //Save the file path as the avatar in the user entity
-            getBinding().imageButton.setImageURI(imageUri);
-            getBinding().imageButton.setTag(fileName); // Store the image URI as a tag
-        }
-    }
-
     // Clear input fields after adding the user
     private void clearInputs() {
         getBinding().txtName.setText("");
@@ -228,13 +221,22 @@ public class UserListFragment extends Fragment implements MainActivity.OnImageSe
         getBinding().imageButton.setTag(null); // Clear the image URI
     }
 
+//    private int findUserPosition(int userId) {
+//        List<User> users = viewModel.users.getValue();
+//        if (users != null) {
+//            for (int i = 0; i < users.size(); i++) {
+//                if (users.get(i).getId() == userId) {
+//                    return i;
+//                }
+//            }
+//        }
+//        return -1; // Return -1 if user not found
+//    }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         _binding = null;
-        // Set the listener to null in case the fragment is destroyed
-        // The adapter should be handling the listener now
-        ((MainActivity) requireActivity()).setOnImageSelectedListener(null);
     }
 }

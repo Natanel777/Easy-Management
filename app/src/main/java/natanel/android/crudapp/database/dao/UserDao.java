@@ -25,8 +25,8 @@ public interface UserDao {
     @Query("UPDATE users SET position = position + 1")
     void incrementUserPositions();
 
-    @Query("SELECT COUNT(*) FROM users")
-    int getUserCount();
+    @Query("SELECT MAX(id) FROM users")
+    int getLastUserId();
 
     @Query("DELETE FROM users WHERE id = :userId")
     void deleteUser(int userId);

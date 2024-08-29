@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,13 +26,14 @@ public class ImageUtils {
             fos.close();
         } catch (IOException e) {
             Toast.makeText(context, "Failed to save image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("ImageUtils", "saveImageToInternalStorage: " + e.getMessage());
         }
     }
 
     public static void removeImageFromStorage(@NonNull Context context, String fileName) {
         File file = new File(context.getFilesDir(), fileName);
         if (file.exists() && file.delete()) {
-            Toast.makeText(context, "Image removed", Toast.LENGTH_SHORT).show();
+            Log.d("UserAdapter", "ImageUtils Old Image Removed: " + fileName);
         } else {
             Toast.makeText(context, "Failed to remove image", Toast.LENGTH_SHORT).show();
         }
